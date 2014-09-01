@@ -51,11 +51,6 @@ class NP_ShowBlogs extends NucleusPlugin
 		return 'Show Blogs';
 	}
 
-	function getMinNucleusVersion()
-	{
-		return '322';
-	}
-
 	function getAuthor()
 	{
 		return 'Taka + nakahara21 + kimitake + shizuki';
@@ -76,15 +71,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		return _SHOWB_DESC; 
 	} 
 
-	function supportsFeature($what)
-	{
-		switch($what){
-			case 'SqlTablePrefix':
-				return 1;
-			default:
-				return 0;
-		}
-	}
+	function supportsFeature($feature) { return in_array ($feature, array ('SqlTablePrefix', 'SqlApi')); }
+	function getMinNucleusVersion()    { return '350'; }
 
 	function getEventList()
 	{
@@ -434,7 +422,7 @@ class NP_ShowBlogs extends NucleusPlugin
 					}
 
 					//echo $stickynumber;
-					if ($showAdCode > 0 && mysql_num_rows(sql_query($sticky_query))) {
+					if ($showAdCode > 0 && sql_num_rows(sql_query($sticky_query))) {
 						if ($ads == 0) {
 							echo $this->getOption('ads');
 						} elseif ($ads == 1) {
@@ -485,7 +473,7 @@ class NP_ShowBlogs extends NucleusPlugin
 		if ($q_amount <= 0) return;
 		$onlyone_query = $showQuery . ' LIMIT ' . intval($q_startpos) . ', 1';
 		$b->showUsingQuery($template, $onlyone_query, 0, 1, 1); 
-		if (mysql_num_rows(sql_query($onlyone_query)) && empty($ads) && $this->showAdCode > 0) {
+		if (sql_num_rows(sql_query($onlyone_query)) && empty($ads) && $this->showAdCode > 0) {
 			echo $this->getOption('ads2');
 		}
 //------------SECOND AD CODE END-------------
@@ -653,7 +641,7 @@ class NP_ShowBlogs extends NucleusPlugin
 			$p_query = sprintf($p_query, sql_table('item'), $mtable, $where);
 //			$p_query = 'SELECT COUNT(i.inumber) FROM ' . sql_table('item') . ' as i' . $mtable . ' WHERE i.idraft=0' . $where;
 			$entries = sql_query($p_query);
-			if ($row = mysql_fetch_row($entries)) {
+			if ($row = sql_fetch_row($entries)) {
 				$totalamount = $row[0];
 			}
 		}
@@ -793,7 +781,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$tres = sql_query(sprintf($mque, $subcatTable, $subcatid));
 //				$tres = sql_query('SELECT * FROM ' . sql_table('plug_multiple_categories_sub') .
 //								' WHERE scatid = ' . intval($subcatid));
-				$ra   = mysql_fetch_array($tres, MYSQL_ASSOC);
+				$ra   = sql_fetch_array($tres, MYSQL_ASSOC);
 				if (array_key_exists('parentid', $ra)) {
 					$Children = array();
 					$Children = explode('/', $subcatid . $this->getChildren($subcatid));
@@ -822,7 +810,7 @@ class NP_ShowBlogs extends NucleusPlugin
 		$que         = 'SELECT scatid, parentid, sname FROM %s WHERE scatid = %d';
 		$que         = sprintf($que, $subcatTable, intval($subcat_id));
 		$res         = sql_query($que);
-		list($sid, $parent, $sname) = mysql_fetch_row($res);
+		list($sid, $parent, $sname) = sql_fetch_row($res);
 		if ($parent != 0) {
 			$r = $this->getParent(intval($parent)) . '/' . intval($sid);
 		} else {
@@ -837,7 +825,7 @@ class NP_ShowBlogs extends NucleusPlugin
 		$que         = 'SELECT scatid, parentid, sname FROM %s WHERE parentid = %d';
 		$que         = sprintf($que, $subcatTable, intval($subcat_id));
 		$res         = sql_query($que);
-		while ($so =  mysql_fetch_object($res)) {
+		while ($so =  sql_fetch_object($res)) {
 			$r .= $this->getChildren(intval($so->scatid)) . '/' . intval($so->scatid);
 		}
 		return $r;
@@ -861,7 +849,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$item =& $manager->getItem(intval($itemid), 0, 0);
 				$q    =  'SELECT * FROM %s WHERE inum = %d';
 				$res  =  sql_query(sprintf($q, $tagTable, intval($itemid)));
-				while ($o = mysql_fetch_object($res)) {
+				while ($o = sql_fetch_object($res)) {
 					$temp_tags_array = preg_split('/[\n,]+/', trim($o->itags));
 					for ($i=0; $i < count($temp_tags_array); $i++) {
 						$arr['or'][] = trim($temp_tags_array[$i]);
@@ -913,7 +901,7 @@ class NP_ShowBlogs extends NucleusPlugin
 						$q     = 'SELECT itags FROM %s WHERE inum = %d';
 						$q     = sprintf($q, $tagTable, intval($resinum));
 						$res   = sql_query($q);
-						while ($o = mysql_fetch_object($res)) {
+						while ($o = sql_fetch_object($res)) {
 							$resTags = preg_split("/[\n,]+/", trim($o->itags));
 							for ($i=0; $i < count($resTags); $i++) {
 								$iTags[] = trim($resTags[$i]);
