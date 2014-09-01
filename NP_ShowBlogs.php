@@ -63,7 +63,7 @@ class NP_ShowBlogs extends NucleusPlugin
 
 	function getVersion()
 	{
-		return '2.7';
+		return '2.72';
 	}
 
 	function getDescription()
