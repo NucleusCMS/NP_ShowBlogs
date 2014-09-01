@@ -83,12 +83,12 @@ class NP_ShowBlogs extends NucleusPlugin
 
 	function init()
 	{
+		$plugin_dir = $this->getDirectory();
 		$language = str_replace( array('\\','/'), '', getLanguageName());
-		if (file_exists($this->getDirectory()  . $language . '.php')) {
-			include_once($this->getDirectory() . $language . '.php');
-		}else {
-			include_once($this->getDirectory() . 'english.php');
-		}
+		if (is_file("{$plugin_dir}{$language}.php"))
+			include_once("{$plugin_dir}{$language}.php");
+		else
+			include_once("{$plugin_dir}english.php");
 	}
 
 	function install()
