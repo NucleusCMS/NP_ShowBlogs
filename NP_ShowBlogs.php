@@ -100,6 +100,17 @@ class NP_ShowBlogs extends NucleusPlugin
 		$this->createOption('tagMode',       _TAG_MODE,   'select',   '2', _TAG_SELECT);
 		$this->createBlogOption('nextLabel', _SB_NEXTL,   'text',     'Next&raquo;');
 		$this->createBlogOption('prevLabel', _SB_PREVL,   'text',     '&laquo;Prev');
+		$this->createBlogOption('nextSep',   _SB_NEXTSEP, 'text',     '| ');
+		$this->createBlogOption('prevSep',   _SB_PREVSEP, 'text',     ' |');
+		$this->createBlogOption('pageSep2',  _SB_PAGESEP2,'text',     '|');
+		$this->createBlogOption('pageSep3',  _SB_PAGESEP3,'text',     '&middot;');
+		$this->createBlogOption('pgListHdr', _SB_PGLSTHDR,'text',     '');
+		$this->createBlogOption('pgListFtr', _SB_PGLSTFTR,'text',     '');
+		$this->createBlogOption('pagePrefix',_SB_PGPREFIX,'text',     ' ');
+		$this->createBlogOption('pageSuffix',_SB_PGSUFFIX,'text',     ' ');
+		$this->createBlogOption('pageDots',  _SB_PAGEDOTS,'text',     '...');
+		$this->createBlogOption('curPgPrfix',_SB_CURPGPRF,'text',     '<strong>');
+		$this->createBlogOption('curPgSffix',_SB_CURPGSUF,'text',     '</strong>');			
 /* todo can't install ? only warning ?
  * douyatte 'desc' ni keikoku wo daseba iinoka wakaranai desu
 		$ver_min = (getNucleusVersion() < $this->getMinNucleusVersion());
@@ -674,6 +685,17 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 		$nextLinkLabel = $this->getBlogOption($this->nowbid, 'nextLabel') ? $this->getBlogOption($this->nowbid, 'nextLabel') : 'Next&raquo;';
 		$prevLinkLabel = $this->getBlogOption($this->nowbid, 'prevLabel') ? $this->getBlogOption($this->nowbid, 'prevLabel') : '&laquo;Prev';
+		$nextSep = $this->getBlogOption($this->nowbid, 'nextSep') ? $this->getBlogOption($this->nowbid, 'nextSep') : '| ';
+		$prevSep = $this->getBlogOption($this->nowbid, 'PrevSep') ? $this->getBlogOption($this->nowbid, 'prevSep') : ' |';
+		$pageSep2 = $this->getBlogOption($this->nowbid, 'pageSep2') ? $this->getBlogOption($this->nowbid, 'pageSep2') : '|';
+		$pageSep3 = $this->getBlogOption($this->nowbid, 'pageSep3') ? $this->getBlogOption($this->nowbid, 'pageSep3') : '&middot;';
+		$pgListHdr = $this->getBlogOption($this->nowbid, 'pgListHdr') ? $this->getBlogOption($this->nowbid, 'pgListHdr') : '';
+		$pgListFtr = $this->getBlogOption($this->nowbid, 'pgListFtr') ? $this->getBlogOption($this->nowbid, 'pgListFtr') : '';
+		$pagePrefix = $this->getBlogOption($this->nowbid, 'pagePrefix') ? $this->getBlogOption($this->nowbid, 'pagePrefix') : ' ';
+		$pageSuffix = $this->getBlogOption($this->nowbid, 'pageSuffix') ? $this->getBlogOption($this->nowbid, 'pageSuffix') : ' ';
+		$pageDots = $this->getBlogOption($this->nowbid, 'pageDots') ? $this->getBlogOption($this->nowbid, 'pageDots') : '...';		
+		$curPgPrfix = $this->getBlogOption($this->nowbid, 'curPgPrfix') ? $this->getBlogOption($this->nowbid, 'curPgPrfix') : '<strong>';
+		$curPgSffix = $this->getBlogOption($this->nowbid, 'curPgSffix') ? $this->getBlogOption($this->nowbid, 'curPgSffix') : '</strong>';
 
 		if ($type >= 1) {
 			$buf .= '<div class="pageswitch">' . "\n";
@@ -684,76 +706,76 @@ class NP_ShowBlogs extends NucleusPlugin
 					$prevpagelink .= '.html';
 				}
 				$buf .= '<a href="' . $prevpagelink . '" title="Previous page" rel="Prev">'
-					  . '<span class="npsb_prevlink">' . $prevLinkLabel . '</span></a> |';
+					  . '<span class="npsb_prevlink">' . $prevLinkLabel . '</span></a>' . $prevSep;
 			} elseif ($type >= 2) {
-				$buf .= $prevLinkLabel . " |";
+				$buf .= $prevLinkLabel . $prevSep;
 			}
 			if (intval($type) == 1) {
 				$buf .= "\n";
 			}
 			if (intval($type) == 2) {
-				$sepstr = '&middot;';
-				$buf   .= "|";
+				$buf .= $pgListHdr . $pageSep2;
 				for ($i=1; $i<=$totalpages; $i++) {
 					$i_pagelink = $pagelink . $page_str . $i;
 					if ($page_str == 'page_') {
 						$i_pagelink .= '.html';
 					}
 					if ($i == $currentpage) {
-						$buf .= ' <strong>' . $i . '</strong> |' . "\n";
+						$buf .= $pagePrefix . $curPgPrfix . $i . $curPgSffix . $pageSuffix . $pageSep2 . "\n";
 					} elseif ($totalpages<10 || $i<4 || $i>$totalpages-3) {
-						$buf .= ' <a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
-							  . $i . '</a> |' . "\n";
+						$buf .= $pagePrefix . '<a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
+							  . $i . '</a>' . $pageSuffix . $pageSep2 . "\n";
 					} else {
 						if ($i<$currentpage-1 || $i>$currentpage+1) {
 							if (($i == 4 && ($currentpage > 5 || $currentpage == 1)) || $i == $currentpage + 2) {
 								$buf  = rtrim($buf);
-								$buf .= "...|\n";
+								$buf .= $pageDots . $pageSep2 . "\n";
 							}
 						} else {
-							$buf .= ' <a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
-								  . $i . '</a> |' . "\n";
+							$buf .= $pagePrefix . '<a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
+								  . $i . '</a>' . $pageSuffix . $pageSep2 . "\n";
 						}
 					}
 				}
-				$buf = rtrim($buf);
+				$buf = rtrim($buf) . $pgListFtr;
 			}
 			if (intval($type) == 3) {
-				$buf .= '|';
-				$sepstr = '&middot;';
-				for ($i = 1; $i <= $totalpages; $i++) {
+				$buf .= $pgListHdr . $pageSep2;
+				if ($currentpage - 4 > 1) {
+					$buf .= ' ' . $pageDots . "\n";
+				}
+				for ($i = max(1, $currentpage - 4); $i <= min($totalpages, $currentpage + 4); $i++) {
 					$i_pagelink = $pagelink . $page_str . $i;
 					if ($page_str == 'page_') {
 						$i_pagelink .= '.html';
 					}
-					$paging = 5;
 					if ($i == $currentpage) {
-						$buf .= ' <strong>' . $i . '</strong> ' . $sepstr . "\n";
-					} elseif ($totalpages < 10 || ($i < ($currentpage + $paging) && ($currentpage - $paging) < $i)) {
-						$buf .= ' <a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
-							  . $i . '</a> ' . $sepstr . "\n";
-					} elseif ($currentpage - $paging == $i) {
-						$buf = rtrim($buf);
-						$buf .= ' ...'."\n";
-					} elseif ($currentpage + $paging == $i) {
-						$buf = rtrim($buf);
-						$buf = preg_replace('/$sepstr$/', '', $buf);
-						$buf .= "... |\n";
+						$bufarray[] = $pagePrefix . $curPgPrfix . $i .  $curPgSffix . $pageSuffix . "\n";
+					} else {
+						$bufarray[] = $pagePrefix . '<a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
+							  . $i . '</a>' . $pageSuffix . "\n";
 					}
 				}
+				$buf .= implode($pageSep3, $bufarray);
+				if ($currentpage + 4 < $totalpages) {
+					$buf .= $pageDots . ' ';
+				}
+				$buf .= $pageSep2;
+				$buf .= $pgListFtr;
 			}
 			if ($totalpages >= $nextpage) {
 				$nextpagelink = $pagelink . $page_str . $nextpage;
 				if ($page_str == 'page_') {
 					$nextpagelink .= '.html';
 				}
-				$buf .= '| <a href="' . $nextpagelink . '" title="Next page" rel="Next">'
+				$buf .=  $nextSep . '<a href="' . $nextpagelink . '" title="Next page" rel="Next">'
 					  . '<span class="npsb_nextlink">' . $nextLinkLabel . '</span></a>' . "\n";
 			} elseif ($type >= 2) {
-				$buf .= "| " . $nextLinkLabel . "\n";
+				$buf .= $nextSep . $nextLinkLabel . "\n";
 			}
 //			$buf .= " | <a rel=\"last\" title=\"Last page\" href=\"{$lastpagelink}\">&lt;LAST&gt;</a>\n";
 			$buf .= "</div>\n";
+
 			return array('buf' => $buf, 'startpos' => intval($startpos));
 		}
 	}
