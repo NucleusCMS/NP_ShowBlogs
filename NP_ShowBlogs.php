@@ -708,7 +708,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$buf .= '<a href="' . $prevpagelink . '" title="Previous page" rel="Prev">'
 					  . '<span class="npsb_prevlink">' . $prevLinkLabel . '</span></a>' . $prevSep;
 			} elseif ($type >= 2) {
-				$buf .= $prevLinkLabel . $prevSep;
+				$buf .= '<span class="npsb_prevnolink">' . $prevLinkLabel . '</span>' . $prevSep;
 			}
 			if (intval($type) == 1) {
 				$buf .= "\n";
@@ -771,7 +771,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$buf .=  $nextSep . '<a href="' . $nextpagelink . '" title="Next page" rel="Next">'
 					  . '<span class="npsb_nextlink">' . $nextLinkLabel . '</span></a>' . "\n";
 			} elseif ($type >= 2) {
-				$buf .= $nextSep . $nextLinkLabel . "\n";
+				$buf .= $nextSep . '<span class="npsb_nextnolink">' . $nextLinkLabel . "</span>\n";
 			}
 //			$buf .= " | <a rel=\"last\" title=\"Last page\" href=\"{$lastpagelink}\">&lt;LAST&gt;</a>\n";
 			$buf .= "</div>\n";
