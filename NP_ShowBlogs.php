@@ -685,17 +685,17 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 		$nextLinkLabel = $this->getBlogOption($this->nowbid, 'nextLabel') ? $this->getBlogOption($this->nowbid, 'nextLabel') : 'Next&raquo;';
 		$prevLinkLabel = $this->getBlogOption($this->nowbid, 'prevLabel') ? $this->getBlogOption($this->nowbid, 'prevLabel') : '&laquo;Prev';
-		$nextSep = $this->getBlogOption($this->nowbid, 'nextSep') ? $this->getBlogOption($this->nowbid, 'nextSep') : '| ';
-		$prevSep = $this->getBlogOption($this->nowbid, 'PrevSep') ? $this->getBlogOption($this->nowbid, 'prevSep') : ' |';
-		$pageSep2 = $this->getBlogOption($this->nowbid, 'pageSep2') ? $this->getBlogOption($this->nowbid, 'pageSep2') : '|';
-		$pageSep3 = $this->getBlogOption($this->nowbid, 'pageSep3') ? $this->getBlogOption($this->nowbid, 'pageSep3') : '&middot;';
-		$pgListHdr = $this->getBlogOption($this->nowbid, 'pgListHdr') ? $this->getBlogOption($this->nowbid, 'pgListHdr') : '';
-		$pgListFtr = $this->getBlogOption($this->nowbid, 'pgListFtr') ? $this->getBlogOption($this->nowbid, 'pgListFtr') : '';
-		$pagePrefix = $this->getBlogOption($this->nowbid, 'pagePrefix') ? $this->getBlogOption($this->nowbid, 'pagePrefix') : ' ';
-		$pageSuffix = $this->getBlogOption($this->nowbid, 'pageSuffix') ? $this->getBlogOption($this->nowbid, 'pageSuffix') : ' ';
+		$nextSep = $this->getBlogOption($this->nowbid, 'nextSep');
+		$prevSep = $this->getBlogOption($this->nowbid, 'PrevSep');
+		$pageSep2 = $this->getBlogOption($this->nowbid, 'pageSep2');
+		$pageSep3 = $this->getBlogOption($this->nowbid, 'pageSep3');
+		$pgListHdr = $this->getBlogOption($this->nowbid, 'pgListHdr');
+		$pgListFtr = $this->getBlogOption($this->nowbid, 'pgListFtr');
+		$pagePrefix = $this->getBlogOption($this->nowbid, 'pagePrefix');
+		$pageSuffix = $this->getBlogOption($this->nowbid, 'pageSuffix');
 		$pageDots = $this->getBlogOption($this->nowbid, 'pageDots') ? $this->getBlogOption($this->nowbid, 'pageDots') : '...';		
-		$curPgPrfix = $this->getBlogOption($this->nowbid, 'curPgPrfix') ? $this->getBlogOption($this->nowbid, 'curPgPrfix') : '<strong>';
-		$curPgSffix = $this->getBlogOption($this->nowbid, 'curPgSffix') ? $this->getBlogOption($this->nowbid, 'curPgSffix') : '</strong>';
+		$curPgPrfix = $this->getBlogOption($this->nowbid, 'curPgPrfix');
+		$curPgSffix = $this->getBlogOption($this->nowbid, 'curPgSffix');
 
 		if ($type >= 1) {
 			$buf .= '<div class="pageswitch">' . "\n";
@@ -721,7 +721,7 @@ class NP_ShowBlogs extends NucleusPlugin
 						$i_pagelink .= '.html';
 					}
 					if ($i == $currentpage) {
-						$buf .= $pagePrefix . $curPgPrfix . $i . $curPgSffix . $pageSuffix . $pageSep2 . "\n";
+						$buf .= $curPgPrfix . $i . $curPgSffix . $pageSep2 . "\n";
 					} elseif ($totalpages<10 || $i<4 || $i>$totalpages-3) {
 						$buf .= $pagePrefix . '<a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
 							  . $i . '</a>' . $pageSuffix . $pageSep2 . "\n";
@@ -750,7 +750,7 @@ class NP_ShowBlogs extends NucleusPlugin
 						$i_pagelink .= '.html';
 					}
 					if ($i == $currentpage) {
-						$bufarray[] = $pagePrefix . $curPgPrfix . $i .  $curPgSffix . $pageSuffix . "\n";
+						$bufarray[] = $curPgPrfix . $i . $curPgSffix . "\n";
 					} else {
 						$bufarray[] = $pagePrefix . '<a href="' . $i_pagelink . '" title="Page No.' . $i . '">'
 							  . $i . '</a>' . $pageSuffix . "\n";
