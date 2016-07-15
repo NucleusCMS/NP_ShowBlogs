@@ -564,7 +564,7 @@ class NP_ShowBlogs extends NucleusPlugin
 									   $catrequest => $catid,
 									   $subrequest => $subcatid
 									  );
-					$pagelink  = createArchiveLink($archive, $linkParam);
+					$pagelink  = createArchiveLink($this->nowbid, $archive, $linkParam);
 				} else {
 					$linkParam = array(
 									   $subrequest => $subcatid
@@ -576,7 +576,7 @@ class NP_ShowBlogs extends NucleusPlugin
 					$linkParam = array(
 									   $catrequest => $catid,
 									  );
-					$pagelink  = createArchiveLink($archive, $linkParam);
+					$pagelink  = createArchiveLink($this->nowbid, $archive, $linkParam);
 				} else {
 					$pagelink  = createCategoryLink($catid);
 				}
