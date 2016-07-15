@@ -983,8 +983,8 @@ class NP_ShowBlogs extends NucleusPlugin
 			$this->doSkinVar($this->skintype, $tmplt, $amont, $bmode, $type, $sort, $stick, $stplt, $cmode, $acode, $cstik);
 			return TRUE;
 		} elseif ($key == 'page') {
-			if ($value) {
-				if ($this->currPage == intval($value)) {
+			if ($val) {
+				if ($this->currPage == intval($val)) {
 					return TRUE;
 				} else {
 					return FALSE;
