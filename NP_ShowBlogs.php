@@ -291,11 +291,11 @@ class NP_ShowBlogs extends NucleusPlugin
 //		echo $bmode;
 
 		if ($skinType == 'item' || $skinType == 'index' || $skinType == 'archive') {
-			$catformat = '"' . addslashes($catformat) . '"';
+			$catformat = "'" . sql_real_escape_string($catformat) . "'";
 			$nArr      = array(
-							   '",c.cname,"',
-							   '",b.bname,"',
-							   '",c.cdesc,"'
+							   "',c.cname,'",
+							   "',b.bname,'",
+							   "',c.cdesc,'"
 							  );
 			$fArr      = array(
 							   '/<%category%>/',
