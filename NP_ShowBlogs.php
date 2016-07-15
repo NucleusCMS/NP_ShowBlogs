@@ -45,6 +45,7 @@
 
 class NP_ShowBlogs extends NucleusPlugin
 {
+    var $maxamount = 0;
 
 	function getName()
 	{
@@ -521,6 +522,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		if (getVar('page')) {
 			$currPage = intGetVar('page');
 		}
+        if (!isset($currPage)) $currPage = 0;
+        $currPage = max(0, intval($currPage));
 		$_GET['page']   = intval($currPage);
 		$this->currPage = intval($currPage);
 		$this->pagestr  = $page_str;
@@ -614,6 +617,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 
 		$uri = parse_url($pagelink);
+        if (!isset($uri['query']))
+            $uri['query'] = '';
 		if (!$usePathInfo) {
 			if ($pagelink == $CONF['BlogURL']) { // add
 				$pagelink .= '?';
@@ -698,8 +703,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		$curPgSffix = $this->getBlogOption($this->nowbid, 'curPgSffix');
 
 		if ($type >= 1) {
-			$buf .= '<div class="pageswitch">' . "\n";
-//			$buf .= "<a rel=\"first\" title=\"first page\" href=\"{$firstpagelink}\">&lt;TOP&gt;</a> | \n";
+			$buf = '<div class="pageswitch">' . "\n";
+//			$buf = "<a rel=\"first\" title=\"first page\" href=\"{$firstpagelink}\">&lt;TOP&gt;</a> | \n";
 			if (!empty($prevpage)) {
 				$prevpagelink = $pagelink . $page_str . $prevpage;
 				if ($page_str == 'page_') {
