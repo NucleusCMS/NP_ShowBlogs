@@ -343,9 +343,8 @@ class NP_ShowBlogs extends NucleusPlugin
 					$timestamp_start = mktime(0, 0, 0, $m-$monthlimit, $d, $y);
 					$where .= ' AND i.itime >= ' . mysqldate($timestamp_start)
 							. ' AND i.itime <= ' . $timestamp_end;
-				} else {
-					$where .= ' AND i.itime <= ' . mysqldate($b->getCorrectTime());
 				}
+				$where .= ' AND i.itime <= ' . mysqldate($b->getCorrectTime());
 
 				if (!empty($catid)) {
 					if ($manager->pluginInstalled('NP_MultipleCategories')) {
@@ -447,6 +446,8 @@ class NP_ShowBlogs extends NucleusPlugin
 			}
 
 			$sh_query .= ' AND i.idraft = 0' . $where;
+
+            $sh_query .= ' AND i.itime  <= ' . mysqldate($b->getCorrectTime());
 
 			if ($skinType == 'item') {
 				$sh_query .= ' ORDER BY FIND_IN_SET(i.inumber,\'' . @join(',', $t_where['inumsres']) . '\')';
