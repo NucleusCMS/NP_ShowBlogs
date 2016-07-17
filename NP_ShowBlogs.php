@@ -45,6 +45,7 @@
 
 class NP_ShowBlogs extends NucleusPlugin
 {
+    var $maxamount = 0;
 
 	function getName()
 	{
@@ -290,11 +291,11 @@ class NP_ShowBlogs extends NucleusPlugin
 //		echo $bmode;
 
 		if ($skinType == 'item' || $skinType == 'index' || $skinType == 'archive') {
-			$catformat = '"' . addslashes($catformat) . '"';
+			$catformat = "'" . sql_real_escape_string($catformat) . "'";
 			$nArr      = array(
-							   '",c.cname,"',
-							   '",b.bname,"',
-							   '",c.cdesc,"'
+							   "',c.cname,'",
+							   "',b.bname,'",
+							   "',c.cdesc,'"
 							  );
 			$fArr      = array(
 							   '/<%category%>/',
@@ -342,9 +343,8 @@ class NP_ShowBlogs extends NucleusPlugin
 					$timestamp_start = mktime(0, 0, 0, $m-$monthlimit, $d, $y);
 					$where .= ' AND i.itime >= ' . mysqldate($timestamp_start)
 							. ' AND i.itime <= ' . $timestamp_end;
-				} else {
-					$where .= ' AND i.itime <= ' . mysqldate($b->getCorrectTime());
 				}
+				$where .= ' AND i.itime <= ' . mysqldate($b->getCorrectTime());
 
 				if (!empty($catid)) {
 					if ($manager->pluginInstalled('NP_MultipleCategories')) {
@@ -447,6 +447,8 @@ class NP_ShowBlogs extends NucleusPlugin
 
 			$sh_query .= ' AND i.idraft = 0' . $where;
 
+            $sh_query .= ' AND i.itime  <= ' . mysqldate($b->getCorrectTime());
+
 			if ($skinType == 'item') {
 				$sh_query .= ' ORDER BY FIND_IN_SET(i.inumber,\'' . @join(',', $t_where['inumsres']) . '\')';
 			} else {
@@ -521,6 +523,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		if (getVar('page')) {
 			$currPage = intGetVar('page');
 		}
+        if (!isset($currPage)) $currPage = 0;
+        $currPage = max(0, intval($currPage));
 		$_GET['page']   = intval($currPage);
 		$this->currPage = intval($currPage);
 		$this->pagestr  = $page_str;
@@ -561,7 +565,7 @@ class NP_ShowBlogs extends NucleusPlugin
 									   $catrequest => $catid,
 									   $subrequest => $subcatid
 									  );
-					$pagelink  = createArchiveLink($archive, $linkParam);
+					$pagelink  = createArchiveLink($this->nowbid, $archive, $linkParam);
 				} else {
 					$linkParam = array(
 									   $subrequest => $subcatid
@@ -573,7 +577,7 @@ class NP_ShowBlogs extends NucleusPlugin
 					$linkParam = array(
 									   $catrequest => $catid,
 									  );
-					$pagelink  = createArchiveLink($archive, $linkParam);
+					$pagelink  = createArchiveLink($this->nowbid, $archive, $linkParam);
 				} else {
 					$pagelink  = createCategoryLink($catid);
 				}
@@ -614,6 +618,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 
 		$uri = parse_url($pagelink);
+        if (!isset($uri['query']))
+            $uri['query'] = '';
 		if (!$usePathInfo) {
 			if ($pagelink == $CONF['BlogURL']) { // add
 				$pagelink .= '?';
@@ -698,8 +704,8 @@ class NP_ShowBlogs extends NucleusPlugin
 		$curPgSffix = $this->getBlogOption($this->nowbid, 'curPgSffix');
 
 		if ($type >= 1) {
-			$buf .= '<div class="pageswitch">' . "\n";
-//			$buf .= "<a rel=\"first\" title=\"first page\" href=\"{$firstpagelink}\">&lt;TOP&gt;</a> | \n";
+			$buf = '<div class="pageswitch">' . "\n";
+//			$buf = "<a rel=\"first\" title=\"first page\" href=\"{$firstpagelink}\">&lt;TOP&gt;</a> | \n";
 			if (!empty($prevpage)) {
 				$prevpagelink = $pagelink . $page_str . $prevpage;
 				if ($page_str == 'page_') {
@@ -763,7 +769,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$buf .= $pageSep2;
 				$buf .= $pgListFtr;
 			}
-			if ($totalpages >= $nextpage) {
+			if ($totalpages > $nextpage) {
 				$nextpagelink = $pagelink . $page_str . $nextpage;
 				if ($page_str == 'page_') {
 					$nextpagelink .= '.html';
@@ -978,8 +984,8 @@ class NP_ShowBlogs extends NucleusPlugin
 			$this->doSkinVar($this->skintype, $tmplt, $amont, $bmode, $type, $sort, $stick, $stplt, $cmode, $acode, $cstik);
 			return TRUE;
 		} elseif ($key == 'page') {
-			if ($value) {
-				if ($this->currPage == intval($value)) {
+			if ($val) {
+				if ($this->currPage == intval($val)) {
 					return TRUE;
 				} else {
 					return FALSE;
