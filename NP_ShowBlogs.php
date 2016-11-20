@@ -769,7 +769,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				$buf .= $pageSep2;
 				$buf .= $pgListFtr;
 			}
-			if ($totalpages > $nextpage) {
+			if ($totalpages >= $nextpage) {
 				$nextpagelink = $pagelink . $page_str . $nextpage;
 				if ($page_str == 'page_') {
 					$nextpagelink .= '.html';
