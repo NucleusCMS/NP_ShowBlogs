@@ -885,6 +885,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				}
 			}
 			if ($skin_type != 'item') {
+				$inumsand = array();
 				for ($i=0; $i < count($arr['and']); $i++) {
 					$deTag = $tplugin->_rawdecode($arr['and'][$i]);
 					if ($allTags[$deTag]) {
@@ -940,14 +941,25 @@ class NP_ShowBlogs extends NucleusPlugin
 					}
 					asort($tagCount);
 					$inumsres = array();
+					$relatedInums = array();
 					foreach ($tagCount as $resinum => $val) {
 						$relatedInums[] = intval($resinum);
 					}
-					for ($i=0; $i <= $p_amount; $i++) {
+					$loop_max = min(count($relatedInums)-1, intval($p_amount));
+					for ($i=0; $i <= $loop_max; $i++) {
 						$inumsres[$i] = array_pop($relatedInums);
 					}
 				}
-				$where .= ' and i.inumber IN ('. @join(',', $inumsres) . ')';
+				// check invalid inumber : empty or negative value
+				foreach ($inumsres as $key => $value ) {
+					if (intval(trim($value)) <= 0)
+						unset($inumsres[$key]);
+				}
+				$inumsres = array_merge($inumsres); // re-index
+				if (empty($inumsres))
+					$where .= ' and i.inumber=0';
+				else
+					$where .= ' and i.inumber IN ('. @join(',', $inumsres) . ')';
 			} else {
 				$where .= ' and i.inumber=0';
 			}
