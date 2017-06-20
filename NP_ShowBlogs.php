@@ -47,49 +47,21 @@ class NP_ShowBlogs extends NucleusPlugin
 {
     var $maxamount = 0;
 
-	function getName()
-	{
-		return 'Show Blogs';
-	}
-
-	function getAuthor()
-	{
-		return 'Taka + nakahara21 + kimitake + shizuki';
-	}
-
-	function getURL()
-	{
-		return 'http://japan.nucleuscms.org/wiki/plugins:showblogs';
-	}
-
-	function getVersion()
-	{
-		return '2.72';
-	}
-
-	function getDescription()
-	{
-		return _SHOWB_DESC; 
-	} 
-
+	function getName()                 { return 'Show Blogs';}
+	function getAuthor()               { return 'Taka + nakahara21 + kimitake + shizuki';}
+	function getURL()                  { return 'http://japan.nucleuscms.org/wiki/plugins:showblogs';}
+	function getVersion()              { return '2.72';}
+	function getDescription()          { return _SHOWB_DESC; }
+	function getEventList()            { return array('InitSkinParse');}
 	function supportsFeature($feature) { return in_array ($feature, array ('SqlTablePrefix', 'SqlApi')); }
 	function getMinNucleusVersion()    { return '350'; }
-
-	function getEventList()
-	{
-		return array(
-			'InitSkinParse'
-		);
-	}
 
 	function init()
 	{
 		$plugin_dir = $this->getDirectory();
 		$language = str_replace( array('\\','/'), '', getLanguageName());
-		if (is_file("{$plugin_dir}{$language}.php"))
-			include_once("{$plugin_dir}{$language}.php");
-		else
-			include_once("{$plugin_dir}english.php");
+		if (is_file("{$plugin_dir}{$language}.php")) include_once("{$plugin_dir}{$language}.php");
+		else                                         include_once("{$plugin_dir}english.php");
 	}
 
 	function install()
@@ -222,49 +194,30 @@ class NP_ShowBlogs extends NucleusPlugin
 			$catmode = 'all';
 		}
 
-		if (!$template) {
-			$template = 'default/index';
-		}
-		if (!$amount) {
-			$amount = 10;
-		}
-		if (!isset($type)) {
-			$type = 1;
-		}
-		if (!$sort) {
-			$sort = 'DESC';
-		}
-		if (!$showAdCode) {
-			$showAdCode = 1;
-		}
-		if (!$catStick) {
-			$catStick = 0;
-		}
+		if (!$template)    $template = 'default/index';
+		if (!$amount)      $amount = 10;
+		if (!isset($type)) $type = 1;
+		if (!$sort)        $sort = 'DESC';
+		if (!$showAdCode)  $showAdCode = 1;
+		if (!$catStick)    $catStick = 0;
 
-		if ($blog) {
-			$b =& $blog; 
-		} else {
-			$b =& $manager->getBlog($CONF['DefaultBlog']);
-		}
+		if ($blog) $b =& $blog; 
+		else       $b =& $manager->getBlog($CONF['DefaultBlog']);
+		
 		$this->nowbid = $nowbid = intval($b->getID());
 
 		$where       = '';
 		$catblogname = 0;
 
-		if ($bmode != 'all') {
-			$where .= ' AND i.iblog = ' . $nowbid;
-		} elseif (isset($hide[0]) && $bmode == 'all') {
+		if ($bmode != 'all') $where .= ' AND i.iblog = ' . $nowbid;
+		elseif (isset($hide[0]) && $bmode == 'all') {
 			foreach ($hide as $val) {
-				if (!is_numeric($val)) {
-					$val = getBlogIDFromName($val);
-				}
+				if (!is_numeric($val)) $val = getBlogIDFromName($val);
 				$where .= ' AND i.iblog != ' . intval($val);
 			}
 		} elseif (isset($show[0]) && $bmode == 'all') {
 			foreach ($show as $val) {
-				if (!is_numeric($val)) {
-					$val = getBlogIDFromName($val);
-				}
+				if (!is_numeric($val)) $val = getBlogIDFromName($val);
 				$w[] = intval($val);
 			}
 			$where .= (count($w) > 0) ? ' AND i.iblog in (' . implode(',', $w) . ')' : '';
@@ -956,10 +909,9 @@ class NP_ShowBlogs extends NucleusPlugin
 						unset($inumsres[$key]);
 				}
 				$inumsres = array_merge($inumsres); // re-index
-				if (empty($inumsres))
-					$where .= ' and i.inumber=0';
-				else
-					$where .= ' and i.inumber IN ('. @join(',', $inumsres) . ')';
+				if (empty($inumsres)) $where .= ' AND i.inumber=0';
+				else                  $where .= ' AND i.inumber IN ('. @join(',', $inumsres) . ')';
+					
 			} else {
 				$where .= ' and i.inumber=0';
 			}
@@ -1010,6 +962,4 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 
 	}
-
 }
-
