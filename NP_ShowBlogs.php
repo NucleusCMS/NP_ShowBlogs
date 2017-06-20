@@ -276,7 +276,7 @@ class NP_ShowBlogs extends NucleusPlugin
 				}
 
 //				$hidden = '';
-				$temp = $y = $m = $d = '';
+				$temp = $y = $m = $d = 0;
 				if ($archive) {
 					sscanf($archive, '%d-%d-%d', $y, $m, $d);
 					if ($d) {
