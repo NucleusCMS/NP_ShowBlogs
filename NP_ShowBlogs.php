@@ -628,7 +628,7 @@ class NP_ShowBlogs extends NucleusPlugin
 		}
 		$totalpages = ceil($totalamount / $pageamount);
 		$totalpages = intval($totalpages);
-		if ($startpos > $totalamount) {
+		if ($startpos > $totalamount && $totalamount >= $pageamount) {
 			$currentpage = $totalpages;
 			$startpos    = $totalamount - $pageamount;
 		}
