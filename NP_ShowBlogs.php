@@ -50,7 +50,7 @@ class NP_ShowBlogs extends NucleusPlugin
 	function getName()                 { return 'Show Blogs';}
 	function getAuthor()               { return 'Taka + nakahara21 + kimitake + shizuki';}
 	function getURL()                  { return 'http://japan.nucleuscms.org/wiki/plugins:showblogs';}
-	function getVersion()              { return '2.72';}
+	function getVersion()              { return '2.73';}
 	function getDescription()          { return _SHOWB_DESC; }
 	function getEventList()            { return array('InitSkinParse');}
 	function supportsFeature($feature) { return in_array ($feature, array ('SqlTablePrefix', 'SqlApi')); }
